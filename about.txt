@@ -1,0 +1,5 @@
+https://www.youtube.com/watch?v=zuye-dYSkS0
+https://github.com/snehasishdey333/youtube-2023/tree/blog-app-mern
+I renamed folders for vercel deployment
+MERN blog with 1 image, tags(categories) and comments, with user from context, no redux, image up to fs
+

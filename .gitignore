@@ -1,0 +1,7 @@
+api/node_modules
+api/images
+api/.env
+# api/uploads/*
+
+client/node_modules
+client/.env
