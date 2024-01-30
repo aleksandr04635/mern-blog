@@ -4,8 +4,13 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config();
+
 //REGISTER
 router.post("/register", async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
   try {
     const { username, email, password } = req.body;
     const salt = await bcrypt.genSalt(10);
@@ -20,6 +25,7 @@ router.post("/register", async (req, res) => {
 
 //LOGIN
 router.post("/login", async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
   try {
     console.log("req.body.email", req.body.email);
     const user = await User.findOne({ email: req.body.email });

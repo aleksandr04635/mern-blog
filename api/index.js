@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+dotenv.config();
 const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
@@ -24,7 +25,7 @@ const connectDB = async () => {
 };
 
 //middlewares
-dotenv.config();
+
 app.use(express.json());
 app.use("/images", express.static(path.join(__dirname, "/images")));
 app.use(cors({ origin: process.env.ORIGIN, credentials: true }));
