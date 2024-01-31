@@ -17,6 +17,7 @@ const PostDetails = () => {
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
   const [loader, setLoader] = useState(false);
+  const [cloader, setCloader] = useState(false);
   const navigate = useNavigate();
 
   const fetchPost = async () => {
@@ -46,13 +47,13 @@ const PostDetails = () => {
   }, [postId]);
 
   const fetchPostComments = async () => {
-    setLoader(true);
+    setCloader(true);
     try {
       const res = await axios.get(URL + "/api/comments/post/" + postId);
       setComments(res.data);
-      setLoader(false);
+      setCloader(false);
     } catch (err) {
-      setLoader(true);
+      setCloader(true);
       console.log(err);
     }
   };
@@ -75,9 +76,21 @@ const PostDetails = () => {
         { withCredentials: true }
       );
 
-      // fetchPostComments()
+      fetchPostComments();
       // setComment("")
-      window.location.reload(true);
+      //window.location.reload(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const deleteComment = async (id) => {
+    try {
+      await axios.delete(URL + "/api/comments/" + id, {
+        withCredentials: true,
+      });
+      fetchPostComments();
+      //window.location.reload(true);
     } catch (err) {
       console.log(err);
     }
@@ -132,27 +145,40 @@ const PostDetails = () => {
               ))}
             </div>
           </div>
-          <div className="flex flex-col mt-4">
-            <h3 className="mt-6 mb-4 font-semibold">Comments:</h3>
-            {comments?.map((c) => (
-              <Comment key={c._id} c={c} post={post} />
-            ))}
-          </div>
-          {/* write a comment */}
-          <div className="w-full flex flex-col mt-4 md:flex-row">
-            <input
-              onChange={(e) => setComment(e.target.value)}
-              type="text"
-              placeholder="Write a comment"
-              className="md:w-[80%] outline-none py-2 px-4 mt-4 md:mt-0"
-            />
-            <button
-              onClick={postComment}
-              className="bg-black text-sm text-white px-2 py-2 md:w-[20%] mt-4 md:mt-0"
-            >
-              Add Comment
-            </button>
-          </div>
+          {cloader ? (
+            <div className="h-[80vh] flex justify-center items-center w-full">
+              <Loader />
+            </div>
+          ) : (
+            <div>
+              <div className="flex flex-col mt-4">
+                <h3 className="mt-6 mb-4 font-semibold">Comments:</h3>
+                {comments?.map((c) => (
+                  <Comment
+                    key={c._id}
+                    c={c}
+                    post={post}
+                    deleteComment={deleteComment}
+                  />
+                ))}
+              </div>
+              {/* write a comment */}
+              <div className="w-full flex flex-col mt-4 md:flex-row">
+                <input
+                  onChange={(e) => setComment(e.target.value)}
+                  type="text"
+                  placeholder="Write a comment"
+                  className="md:w-[80%] outline-none py-2 px-4 mt-4 md:mt-0 border"
+                />
+                <button
+                  onClick={postComment}
+                  className="bg-black text-sm text-white px-2 py-2 md:w-[20%] mt-4 md:mt-0"
+                >
+                  Add Comment
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
       <Footer />
